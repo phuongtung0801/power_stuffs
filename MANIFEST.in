@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include power_stuffs *.css
+recursive-include power_stuffs *.csv
+recursive-include power_stuffs *.html
+recursive-include power_stuffs *.ico
+recursive-include power_stuffs *.js
+recursive-include power_stuffs *.json
+recursive-include power_stuffs *.md
+recursive-include power_stuffs *.png
+recursive-include power_stuffs *.py
+recursive-include power_stuffs *.svg
+recursive-include power_stuffs *.txt
+recursive-exclude power_stuffs *.pyc
