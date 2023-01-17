@@ -1,5 +1,57 @@
 import frappe
 
+#handle inverter power daily GET request
+#param: 
+# {
+#     "param": {
+#         "dateFrom": "2023-01-16",
+#         "inverter_name": "GL4-INV 01"
+#     }
+# }
+@frappe.whitelist()
+def inverter_power_daily(param):
+    dateFrom = param["dateFrom"]
+    inverter_name = param["inverter_name"]
+    dateStart = dateFrom + " 00:00:00"
+    dateEnd = dateFrom + " 23:59:59"
+    values = {'inverter_name': inverter_name, "from": dateStart, "to": dateEnd}
+    docArr = frappe.db.sql("""
+    select name, docstatus, site_name, power_per_hour, `from`, `to` from `tabInverter Power Per Hour` where inverter_name = %(inverter_name)s and `from` > %(from)s and `from` < %(to)s order by `from` asc
+    """, values= values, as_dict=0)
+    sumPowerTotal = 0
+    for element in docArr:
+        sumPowerTotal = sumPowerTotal + element[3]
+    return sumPowerTotal
+
+
+#handle site power total GET request
+#param: 
+# {
+#     "param": {
+#         "dateFrom": "2023-01-09",
+#         "dateTo": "2023-01-16",
+#         "site_name": "Gia Lai 4"
+#     }
+# }
+@frappe.whitelist()
+def inverter_power_total(param):
+    dateFrom = param["dateFrom"]
+    dateTo = param["dateTo"]
+    inverter_name = param["inverter_name"]
+    dateStart = dateFrom + " 00:00:00"
+    dateEnd = dateTo + " 23:59:59"
+
+    values = {'inverter_name': inverter_name, "from": dateStart, "to": dateEnd}
+    docArr = frappe.db.sql("""
+    select name, docstatus, inverter_name, power_per_hour, `from`, `to` from `tabInverter Power Per Hour` where inverter_name = %(inverter_name)s and `from` > %(from)s and `from` < %(to)s order by `from` asc
+    """, values= values, as_dict=0)
+    sumPowerWeekly = 0
+    for element in docArr:
+        sumPowerWeekly = sumPowerWeekly + element[3]
+    
+    return sumPowerWeekly
+
+###########################################################################################################
 #handle site power daily GET request
 #param: 
 # {
@@ -18,10 +70,10 @@ def site_power_daily(param):
     docArr = frappe.db.sql("""
     select name, docstatus, site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour` where site_name = %(site_name)s and `from` > %(from)s and `from` < %(to)s order by `from` asc
     """, values= values, as_dict=0)
-    sumPowerDaily = 0
+    sumPowerTotal = 0
     for element in docArr:
-        sumPowerDaily = sumPowerDaily + element[3]
-    return sumPowerDaily
+        sumPowerTotal = sumPowerTotal + element[3]
+    return sumPowerTotal
 
 
 #handle site power total GET request
