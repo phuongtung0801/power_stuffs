@@ -8,7 +8,8 @@ MIT# power_stuffs
 
 ### APIs
 
-```inverter_power_daily
+```
+inverter_power_daily
 inverter_power_weekly
 inverter_power_monthly
 inverter_power_quarter
@@ -16,7 +17,8 @@ inverter_power_quarter
 site_power_daily
 site_power_weekly
 site_power_monthly
-site_power_quarter```
+site_power_quarter
+```
 
 *all similar*
 
