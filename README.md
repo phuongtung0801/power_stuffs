@@ -23,6 +23,7 @@ site_power_quarter
 *all similar*
 
 EX: `GET https://erp.plink-cloud.com/api/method/power_stuffs.api_power.inverter_power_daily`
+
 **body**: 
 ```json
 {
