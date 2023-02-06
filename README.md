@@ -7,7 +7,18 @@ calculate power total of site, inverter, add record site, inveter power pwer hou
 MIT# power_stuffs
 
 ### APIs
-similar
+
+```inverter_power_daily
+inverter_power_weekly
+inverter_power_monthly
+inverter_power_quarter
+
+site_power_daily
+site_power_weekly
+site_power_monthly
+site_power_quarter```
+
+*all similar*
 
 EX: `GET https://erp.plink-cloud.com/api/method/power_stuffs.api_power.inverter_power_daily`
 **body**: 
