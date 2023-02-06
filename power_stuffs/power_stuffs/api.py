@@ -62,18 +62,25 @@ def inverter_power_total(param):
 # }
 @frappe.whitelist()
 def site_power_daily(param):
-    dateFrom = param["dateFrom"]
+    date = param["date"]
     site_name = param["site_name"]
-    dateStart = dateFrom + " 00:00:00"
-    dateEnd = dateFrom + " 23:59:59"
+    dateStart = date + " 00:00:00"
+    dateEnd = date + " 23:59:59"
     values = {'site_name': site_name, "from": dateStart, "to": dateEnd}
     docArr = frappe.db.sql("""
     select name, docstatus, site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour` where site_name = %(site_name)s and `from` > %(from)s and `from` < %(to)s order by `from` asc
     """, values= values, as_dict=0)
+    return docArr
     sumPowerTotal = 0
     for element in docArr:
         sumPowerTotal = sumPowerTotal + element[3]
     return sumPowerTotal
+
+
+
+
+
+
 
 
 #handle site power total GET request
