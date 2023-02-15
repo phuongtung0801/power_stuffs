@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-02-13 15:01:58.952153",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "site_label",
+  "type",
+  "first_name",
+  "last_name",
+  "customer_site_owner_name",
+  "gender",
+  "date_of_birth",
+  "data_9"
+ ],
+ "fields": [
+  {
+   "fieldname": "site_label",
+   "fieldtype": "Link",
+   "label": "Site",
+   "options": "Site"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "\nOwner\nSharing Permisson"
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "T\u00ean"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "H\u1ecd"
+  },
+  {
+   "fieldname": "customer_site_owner_name",
+   "fieldtype": "Data",
+   "label": "T\u00ean \u0111\u1ea7y \u0111\u1ee7"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Select",
+   "label": "Gi\u1edbi t\u00ednh",
+   "options": "\nNam\nN\u1eef\nKh\u00e1c"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "N\u0103m sinh"
+  },
+  {
+   "fieldname": "data_9",
+   "fieldtype": "Data"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-02-15 11:13:16.075513",
+ "modified_by": "Administrator",
+ "module": "Power Stuffs",
+ "name": "Customer Site Owner",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

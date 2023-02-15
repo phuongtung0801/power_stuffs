@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-02-13 14:38:23.536581",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer_type",
+  "personal_tab",
+  "is_site_owner",
+  "customer_site_owner",
+  "customer_user",
+  "full_name",
+  "company_tab",
+  "company_name",
+  "invester_tab",
+  "invester_name",
+  "invester_info"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer_type",
+   "fieldtype": "Select",
+   "label": "Customer type",
+   "options": "\nPersonal\nCompany\nInvester"
+  },
+  {
+   "depends_on": "eval:doc.customer_type == \"Personal\"",
+   "fieldname": "personal_tab",
+   "fieldtype": "Tab Break",
+   "label": "Personal"
+  },
+  {
+   "depends_on": "eval:doc.is_site_owner == 0",
+   "fieldname": "customer_user",
+   "fieldtype": "Link",
+   "label": "Customer User",
+   "options": "Customer User"
+  },
+  {
+   "fetch_from": "Customer_User.customer_user_name",
+   "fieldname": "full_name",
+   "fieldtype": "Read Only",
+   "label": "Full Name"
+  },
+  {
+   "depends_on": "eval:doc.customer_type == \"Company\"",
+   "fieldname": "company_tab",
+   "fieldtype": "Tab Break",
+   "label": "Company"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Link",
+   "label": "Company Name",
+   "options": "Company"
+  },
+  {
+   "depends_on": "eval:doc.customer_type == \"Invester\"",
+   "fieldname": "invester_tab",
+   "fieldtype": "Tab Break",
+   "label": "Invester"
+  },
+  {
+   "fieldname": "invester_name",
+   "fieldtype": "Data",
+   "label": "Invester Name"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_site_owner",
+   "fieldtype": "Check",
+   "label": "Is Site Owner"
+  },
+  {
+   "depends_on": "eval:doc.is_site_owner == 1",
+   "fieldname": "customer_site_owner",
+   "fieldtype": "Link",
+   "label": "Customer Site Owner",
+   "options": "Customer Site Owner"
+  },
+  {
+   "fieldname": "invester_info",
+   "fieldtype": "Data",
+   "label": "Invester Info"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-02-15 14:20:42.427166",
+ "modified_by": "Administrator",
+ "module": "Power Stuffs",
+ "name": "Customer OM",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
