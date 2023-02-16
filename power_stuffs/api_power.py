@@ -4,11 +4,71 @@ from dateutil.relativedelta import relativedelta
 import frappe
 
 
+#GET Inverter of Site Power by time range
 @frappe.whitelist()
-def site_power_custom(param):
-    dateFrom = param["dateFrom"]
-    dateTo = param["dateTo"]
-    site_name = param["site_name"]
+def inverter_of_site_power_by_time_range():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    site_name = frappe.request.args.get("site_name")
+
+    # #######
+    powerMonthlyArr  = []
+    sum = 0
+    queryString = f"""select site_name, power_per_hour, `from`, `to`, is_accumulated from `tabSite Power Per Hour`  where `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
+    # return queryString
+    docArr = frappe.db.sql(queryString)
+    for element in docArr:
+        sum = sum + element[1]
+        jsonObjDay = {
+            "site_name": element[0],
+            "power": element[1],
+            "from": element[2],
+            "to": element[3],
+            "is_accumulated": element[4]
+        }
+        powerMonthlyArr.append(jsonObjDay)
+    response = {
+        "length": len(powerMonthlyArr),
+        "powerSum": sum,
+        "body": powerMonthlyArr
+    }
+    return response 
+
+#GET Site Power by time range
+@frappe.whitelist()
+def all_site_power_by_time_range():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    site_name = frappe.request.args.get("site_name")
+
+    # #######
+    powerMonthlyArr  = []
+    sum = 0
+    queryString = f"""select site_name, power_per_hour, `from`, `to`, is_accumulated from `tabSite Power Per Hour`  where `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
+    # return queryString
+    docArr = frappe.db.sql(queryString)
+    for element in docArr:
+        sum = sum + element[1]
+        jsonObjDay = {
+            "site_name": element[0],
+            "power": element[1],
+            "from": element[2],
+            "to": element[3],
+            "is_accumulated": element[4]
+        }
+        powerMonthlyArr.append(jsonObjDay)
+    response = {
+        "length": len(powerMonthlyArr),
+        "powerSum": sum,
+        "body": powerMonthlyArr
+    }
+    return response 
+
+@frappe.whitelist()
+def site_power_by_time_range():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    site_name = frappe.request.args.get("site_name")
     
     # # strptime(input_string, input_format)
     # date_time_obj_from = datetime.datetime.strptime(dateFrom, '%Y-%m-%d')
