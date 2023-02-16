@@ -118,41 +118,73 @@ def site_power_by_time_range_month_view():
     # day = date_time_obj.day
 
     # #######
-    powerMonthlyArr  = []
-    powerMonthly  = {
-        "power_day_view": 0
-    }
-    sum = 0
     # dateStringStart = datetime.datetime(year, month, day, 00, 00, 00)
     # dateStringEnd = datetime.datetime(year, month, day, 23, 59, 59)
     queryString = f"""select site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour`  where site_name = "{site_name}" and `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
     # return queryString
     docArr = frappe.db.sql(queryString)
-    # Process day powe
-    power_by_date = defaultdict(int)
-    for site_name, power, date_from, date_to in docArr:
-        date_range = pd.date_range(date_from, date_to, freq="D")
-        for date in date_range:
-            power_by_date[date.strftime("%Y-%m-%d")] += power
-            
-        return powerMonthly
-        powerMonthlyArr.append(powerMonthly)
-    return powerMonthlyArr
+  
+    # Process day power
+    totals = defaultdict(int)
     for element in docArr:
-        sum = sum + element[1]
-        jsonObjDay = {
-            "site_name": element[0],
-            "power": element[1],
-            "from": element[2],
-            "to": element[3],
-        }
-        powerMonthlyArr.append(jsonObjDay)
-    response = {
-        "length": len(powerMonthlyArr),
-        "powerSum": sum,
-        "body": powerMonthlyArr
+        date = element[2].date()
+        totals[date] += element[1]
+    obj = []
+    for date, total in totals.items():
+        obj.append({
+            "site_name": site_name,
+            "date": date,
+            "power": total
+        })
+    res = {
+        "length": len(obj),
+        "body": obj
     }
-    return response 
+    return res
+
+
+#GET Site Power by time range year view
+@frappe.whitelist()
+def site_power_by_time_range_year_view():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    site_name = frappe.request.args.get("site_name")
+    
+    # # strptime(input_string, input_format)
+    # date_time_obj_from = datetime.datetime.strptime(dateFrom, '%Y-%m-%d')
+    # date_time_obj_to = datetime.datetime.strptime(dateTo, '%Y-%m-%d')
+
+    # year = date_time_obj.year
+    # month = date_time_obj.month
+    # day = date_time_obj.day
+
+    # #######
+   
+    # dateStringStart = datetime.datetime(year, month, day, 00, 00, 00)
+    # dateStringEnd = datetime.datetime(year, month, day, 23, 59, 59)
+    queryString = f"""select site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour`  where site_name = "{site_name}" and `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
+    # return queryString
+    docArr = frappe.db.sql(queryString)
+  
+    # Process day power
+    totals = defaultdict(int)
+    for element in docArr:
+        date = element[2].strftime("%Y-%m")
+        totals[date] += element[1]
+    obj = []
+    
+    for date, total in totals.items():
+        obj.append({
+            "site_name": site_name,
+            "date": date,
+            "power": total
+        })
+    res = {
+        "length": len(obj),
+        "body": obj
+    }
+    return res
+    
 
 
 
