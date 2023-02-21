@@ -8,16 +8,14 @@
  "engine": "InnoDB",
  "field_order": [
   "customer_type",
-  "personal_tab",
-  "is_site_owner",
-  "customer_site_owner",
-  "customer_user",
-  "full_name",
-  "company_tab",
-  "company_name",
-  "invester_tab",
-  "invester_name",
-  "invester_info"
+  "status",
+  "customer_name",
+  "phone",
+  "email",
+  "address",
+  "ward",
+  "district",
+  "province"
  ],
  "fields": [
   {
@@ -27,69 +25,51 @@
    "options": "\nPersonal\nCompany\nInvester"
   },
   {
-   "depends_on": "eval:doc.customer_type == \"Personal\"",
-   "fieldname": "personal_tab",
-   "fieldtype": "Tab Break",
-   "label": "Personal"
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "S\u1ed1 \u0111i\u1ec7n tho\u1ea1i"
   },
   {
-   "depends_on": "eval:doc.is_site_owner == 0",
-   "fieldname": "customer_user",
-   "fieldtype": "Link",
-   "label": "Customer User",
-   "options": "Customer User"
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "\u0110\u1ecba ch\u1ec9"
+  },
+  {
+   "fieldname": "ward",
+   "fieldtype": "Data",
+   "label": "Ph\u01b0\u1eddng/X\u00e3"
+  },
+  {
+   "fieldname": "district",
+   "fieldtype": "Data",
+   "label": "Qu\u1eadn/Huy\u1ec7n"
+  },
+  {
+   "fieldname": "province",
+   "fieldtype": "Data",
+   "label": "T\u1ec9nh/Th\u00e0nh ph\u1ed1"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Enable\nDisable"
   },
   {
    "fetch_from": "Customer_User.customer_user_name",
-   "fieldname": "full_name",
-   "fieldtype": "Read Only",
-   "label": "Full Name"
-  },
-  {
-   "depends_on": "eval:doc.customer_type == \"Company\"",
-   "fieldname": "company_tab",
-   "fieldtype": "Tab Break",
-   "label": "Company"
-  },
-  {
-   "fieldname": "company_name",
-   "fieldtype": "Link",
-   "label": "Company Name",
-   "options": "Company"
-  },
-  {
-   "depends_on": "eval:doc.customer_type == \"Invester\"",
-   "fieldname": "invester_tab",
-   "fieldtype": "Tab Break",
-   "label": "Invester"
-  },
-  {
-   "fieldname": "invester_name",
+   "fieldname": "customer_name",
    "fieldtype": "Data",
-   "label": "Invester Name"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_site_owner",
-   "fieldtype": "Check",
-   "label": "Is Site Owner"
-  },
-  {
-   "depends_on": "eval:doc.is_site_owner == 1",
-   "fieldname": "customer_site_owner",
-   "fieldtype": "Link",
-   "label": "Customer Site Owner",
-   "options": "Customer Site Owner"
-  },
-  {
-   "fieldname": "invester_info",
-   "fieldtype": "Data",
-   "label": "Invester Info"
+   "label": "T\u00ean kh\u00e1ch h\u00e0ng"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-15 14:20:42.427166",
+ "modified": "2023-02-20 15:33:03.864427",
  "modified_by": "Administrator",
  "module": "Power Stuffs",
  "name": "Customer OM",

@@ -1,47 +1,48 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "naming_series:",
- "creation": "2023-02-13 11:41:38.759819",
+ "creation": "2023-02-13 14:09:45.146777",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "site_label",
-  "site_name",
-  "naming_series"
+  "inverter_slot",
+  "inverter",
+  "status",
+  "start_time"
  ],
  "fields": [
   {
-   "fieldname": "site_label",
+   "fieldname": "inverter_slot",
    "fieldtype": "Link",
-   "label": "Site",
-   "options": "Site"
+   "label": "Inverter Slot",
+   "options": "Inverter Slot"
   },
   {
-   "fetch_from": "site_label.site_name",
-   "fieldname": "site_name",
-   "fieldtype": "Read Only",
-   "hidden": 1,
-   "label": "M\u00e3 site"
+   "fieldname": "inverter",
+   "fieldtype": "Link",
+   "label": "Inverter",
+   "options": "Solar Inverter"
   },
   {
-   "fieldname": "naming_series",
+   "fieldname": "status",
    "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Series",
-   "options": ".site_name.-##"
+   "label": "Status",
+   "options": "\nRun\nMove\nWarranty"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Th\u1eddi gian"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-13 15:19:15.190922",
+ "modified": "2023-02-13 14:09:45.146777",
  "modified_by": "Administrator",
  "module": "Power Stuffs",
- "name": "Inverter Slot",
- "name_case": "UPPER CASE",
- "naming_rule": "By \"Naming Series\" field",
+ "name": "Assets Used History",
  "owner": "Administrator",
  "permissions": [
   {

@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestInverterSlot(FrappeTestCase):
+class TestAssetsUsedHistory(FrappeTestCase):
 	pass

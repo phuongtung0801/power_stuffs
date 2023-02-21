@@ -6,6 +6,15 @@ import pandas as pd
 import frappe
 
 
+@frappe.whitelist()
+def get_latest_date_from():
+    queryString = f"""select site_name, `from`, `to`, `power_per_hour` from `tabSite Power Per Hour` as a where `from`=(select max(`from`)
+from `tabSite Power Per Hour`) limit 1;
+"""
+    docArr = frappe.db.sql(queryString)
+    return docArr
+
+
 #GET Inverter of Site Power by time range
 @frappe.whitelist()
 def inverter_of_site_power_by_time_range():
@@ -64,6 +73,46 @@ def all_site_power_by_time_range():
         "body": powerMonthlyArr
     }
     return response 
+
+#GET all Site Power by time range
+@frappe.whitelist()
+def all_site_power_by_time_range_for_customer():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    user_email = frappe.request.args.get("user_email")
+    # site_name = frappe.request.args.get("site_name")
+
+    # #######
+    powerMonthlyArr  = []
+    sum = 0
+    docArr = frappe.db.sql(f"""
+        select
+            power.site_name, power.power_per_hour, power.`from`, power.`to`
+            from `tabCustomer Site Owner` as site_owner
+            inner join `tabSite` as site on site.name = site_owner.site
+            inner join `tabCustomer OM` as customer_om on customer_om.name = site_owner.customer_om
+            inner join `tabCustomer User` as user on user.customer_name = customer_om.name 
+            inner join `tabSite Power Per Hour` as power on power.site_name = site.name
+            where user.email = "{user_email}" and 
+            power.`from` > "{dateFrom}" and power.`to` < "{dateTo}"
+            order by power.`from` asc
+    """, as_dict=True);
+    for element in docArr:
+        sum = sum + element["power_per_hour"]
+        jsonObjDay = {
+            "site_name": element["site_name"],
+            "power": element["power_per_hour"],
+            "from": element["from"],
+            "to": element["to"],
+        }
+        powerMonthlyArr.append(jsonObjDay)
+    response = {
+        "length": len(powerMonthlyArr),
+        "powerSum": sum,
+        "body": powerMonthlyArr
+    }
+    return response 
+
 #GET Site Power by time range day view
 @frappe.whitelist()
 def site_power_by_time_range_day_view():

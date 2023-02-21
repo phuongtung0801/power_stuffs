@@ -28,12 +28,16 @@ def get_list_site_OM_PLINK():
 #GET Site list with filter user
 @frappe.whitelist()
 def get_list_site_Customer_PLINK():
-    user_full_name = frappe.request.args.get("user_full_name")
+    user_email = frappe.request.args.get("user_email")
     query = frappe.db.sql(f"""
         select
-            `tabSite`.* from `tabSite`
-            inner join `tabCustomer Site Owner` on tabSite.site_label = `tabCustomer Site Owner`.site_label where  `tabCustomer Site Owner`.customer_site_owner_name = "{user_full_name}"
+            site.* from `tabCustomer Site Owner` as site_owner
+            inner join `tabSite` as site on site.name = site_owner.site
+            inner join `tabCustomer OM` as customer_om on customer_om.name = site_owner.customer_om
+            inner join `tabCustomer User` as user on user.customer_name = customer_om.name 
+            where user.email = "{user_email}"
     """, as_dict=True);
+
     
     # query = frappe.db.sql(f"""
     #     select * from `tabCustomer Site Owner` where  `tabCustomer Site Owner`.customer_site_owner_name = "{user_full_name}"

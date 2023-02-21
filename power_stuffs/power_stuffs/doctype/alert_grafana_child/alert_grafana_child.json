@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-02-20 11:47:19.814438",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pending",
+  "clear"
+ ],
+ "fields": [
+  {
+   "fieldname": "pending",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pending",
+   "options": "Alert Grafana Service",
+   "reqd": 1
+  },
+  {
+   "fieldname": "clear",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Clear",
+   "options": "Alert Grafana Service",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-02-20 11:53:54.704919",
+ "modified_by": "Administrator",
+ "module": "Power Stuffs",
+ "name": "Alert Grafana Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
