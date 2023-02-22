@@ -119,19 +119,9 @@ def site_power_by_time_range_day_view():
     dateFrom = frappe.request.args.get("dateFrom")
     dateTo = frappe.request.args.get("dateTo")
     site_name = frappe.request.args.get("site_name")
-    # # strptime(input_string, input_format)
-    # date_time_obj_from = datetime.datetime.strptime(dateFrom, '%Y-%m-%d')
-    # date_time_obj_to = datetime.datetime.strptime(dateTo, '%Y-%m-%d')
-
-    # year = date_time_obj.year
-    # month = date_time_obj.month
-    # day = date_time_obj.day
-
     # #######
     powerMonthlyArr  = []
     sum = 0
-    # dateStringStart = datetime.datetime(year, month, day, 00, 00, 00)
-    # dateStringEnd = datetime.datetime(year, month, day, 23, 59, 59)
     queryString = f"""select site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour`  where site_name = "{site_name}" and `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
     # return queryString
     docArr = frappe.db.sql(queryString)
@@ -151,43 +141,102 @@ def site_power_by_time_range_day_view():
     }
     return response 
 
+@frappe.whitelist()
+def site_power_by_time_range_day_view_for_customer():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    user_email = frappe.request.args.get("user_email")
+    site_name = frappe.request.args.get("site_name")
+    # #######
+    powerMonthlyArr  = []
+    sum = 0
+    # return queryString
+    docArr = frappe.db.sql(f"""
+        select
+            power.site_name, power.power_per_hour, power.`from`, power.`to`
+            from `tabCustomer Site Owner` as site_owner
+            inner join `tabSite` as site on site.name = site_owner.site
+            inner join `tabCustomer OM` as customer_om on customer_om.name = site_owner.customer_om
+            inner join `tabCustomer User` as user on user.customer_name = customer_om.name 
+            inner join `tabSite Power Per Hour` as power on power.site_name = site.name
+            where user.email = "{user_email}" and where power.site_name = {site_name}
+            power.`from` > "{dateFrom}" and power.`to` < "{dateTo}"
+            order by power.`from` asc
+    """, as_dict=True);
+    for element in docArr:
+        sum = sum + element["power_per_hour"]
+        jsonObjDay = {
+            "site_name": element["site_name"],
+            "power": element["power_per_hour"],
+            "from": element["from"],
+            "to": element["to"],
+        }
+        powerMonthlyArr.append(jsonObjDay)
+    response = {
+        "length": len(powerMonthlyArr),
+        "powerSum": sum,
+        "body": powerMonthlyArr
+    }
+    return response 
+
 #GET Site Power by time range month view
 @frappe.whitelist()
 def site_power_by_time_range_month_view():
     dateFrom = frappe.request.args.get("dateFrom")
     dateTo = frappe.request.args.get("dateTo")
     site_name = frappe.request.args.get("site_name")
-    
-    # # strptime(input_string, input_format)
-    # date_time_obj_from = datetime.datetime.strptime(dateFrom, '%Y-%m-%d')
-    # date_time_obj_to = datetime.datetime.strptime(dateTo, '%Y-%m-%d')
-
-    # year = date_time_obj.year
-    # month = date_time_obj.month
-    # day = date_time_obj.day
-
-    # #######
-    # dateStringStart = datetime.datetime(year, month, day, 00, 00, 00)
-    # dateStringEnd = datetime.datetime(year, month, day, 23, 59, 59)
-    queryString = f"""select site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour`  where site_name = "{site_name}" and `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
-    # return queryString
+    # queryString = f"""select site_name, power_per_hour, `from`, `to` from `tabSite Power Per Hour`  where site_name = "{site_name}" and `from` > "{dateFrom}" and `to` < "{dateTo}" order by `from` asc"""
+    queryString = f"""SELECT site_name, DATE(`from`) AS day, SUM(power_per_hour) AS sum_power 
+        FROM `tabSite Power Per Hour` 
+        WHERE site_name = "{site_name}" AND `from` > "{dateFrom}" AND `to` < "{dateTo}"
+        GROUP BY site_name, DATE(`from`);"""
     docArr = frappe.db.sql(queryString)
-  
-    # Process day power
-    totals = defaultdict(int)
-    for element in docArr:
-        date = element[2].date()
-        totals[date] += element[1]
+    # # Process day power
+
     obj = []
-    for date, total in totals.items():
+    for element in docArr:
         obj.append({
-            "site_name": site_name,
-            "date": date,
-            "power": total
+            "site_name": element[0],
+            "date": element[1],
+            "sum_power": element[2]
         })
     res = {
         "length": len(obj),
         "body": obj
+    }
+    return res
+
+@frappe.whitelist()
+def site_power_by_time_range_month_view_for_customer():
+    dateFrom = frappe.request.args.get("dateFrom")
+    dateTo = frappe.request.args.get("dateTo")
+    site_name = frappe.request.args.get("site_name")
+    user_email = frappe.request.args.get("user_email")
+    queryString = f"""
+         SELECT power.site_name, DATE(power.`from`) AS date, SUM(power.power_per_hour) AS sum_power 
+        FROM `tabCustomer Site Owner` AS site_owner
+        INNER JOIN `tabSite` AS site ON site.name = site_owner.site
+        INNER JOIN `tabCustomer OM` AS customer_om ON customer_om.name = site_owner.customer_om
+        INNER JOIN `tabCustomer User` AS user ON user.customer_name = customer_om.name 
+        INNER JOIN `tabSite Power Per Hour` AS power ON power.site_name = site.name
+        WHERE user.email = "{user_email}" AND power.site_name = "{site_name}" AND 
+            power.`from` > "{dateFrom}" AND power.`to` < "{dateTo}" 
+        GROUP BY power.site_name, DATE(power.`from`)
+        ORDER BY power.`from` ASC
+    """
+ 
+    docArr = frappe.db.sql(queryString, as_dict=True);
+    # Process day power
+    # obj = []
+    # for element in docArr:
+    #     obj.append({
+    #         "site_name": element[0],
+    #         "date": element[1],
+    #         "sum_power": element[2]
+    #     })
+    res = {
+        "length": len(docArr),
+        "body": docArr
     }
     return res
 
