@@ -152,16 +152,16 @@ def site_power_by_time_range_day_view_for_customer():
     sum = 0
     # return queryString
     docArr = frappe.db.sql(f"""
-        select
-            power.site_name, power.power_per_hour, power.`from`, power.`to`
-            from `tabCustomer Site Owner` as site_owner
-            inner join `tabSite` as site on site.name = site_owner.site
-            inner join `tabCustomer OM` as customer_om on customer_om.name = site_owner.customer_om
-            inner join `tabCustomer User` as user on user.customer_name = customer_om.name 
-            inner join `tabSite Power Per Hour` as power on power.site_name = site.name
-            where user.email = "{user_email}" and where power.site_name = {site_name}
-            power.`from` > "{dateFrom}" and power.`to` < "{dateTo}"
-            order by power.`from` asc
+        select power.site_name, power.power_per_hour, power.`from`, power.`to`
+        from `tabCustomer Site Owner` as site_owner
+        inner join `tabSite` as site on site.name = site_owner.site
+        inner join `tabCustomer OM` as customer_om on customer_om.name = site_owner.customer_om
+        inner join `tabCustomer User` as user on user.customer_name = customer_om.name 
+        inner join `tabSite Power Per Hour` as power on power.site_name = site.name
+        where user.email = "{user_email}" and power.site_name = "{site_name}"
+        and power.`from` > "{dateFrom}" and power.`to` < "{dateTo}"
+        order by power.`from` asc
+
     """, as_dict=True);
     for element in docArr:
         sum = sum + element["power_per_hour"]
